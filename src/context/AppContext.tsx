@@ -94,10 +94,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        return typeof parsed.stars === 'number' ? parsed.stars : 125;
-      } catch (e) {
-        return 125;
-      }
+        if (parsed && typeof parsed.stars === 'number') return parsed.stars;
+      } catch (e) { /* ignore */ }
     }
     return 125;
   });
@@ -107,10 +105,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        return typeof parsed.coins === 'number' ? parsed.coins : 450;
-      } catch (e) {
-        return 450;
-      }
+        if (parsed && typeof parsed.coins === 'number') return parsed.coins;
+      } catch (e) { /* ignore */ }
     }
     return 450;
   });
@@ -122,10 +118,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        return typeof parsed.darkMode === 'boolean' ? parsed.darkMode : false;
-      } catch (e) {
-        return false;
-      }
+        if (parsed && typeof parsed.darkMode === 'boolean') return parsed.darkMode;
+      } catch (e) { /* ignore */ }
     }
     return false;
   });
@@ -146,10 +140,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        return typeof parsed.kidMode === 'boolean' ? parsed.kidMode : false;
-      } catch (e) {
-        return false;
-      }
+        if (parsed && typeof parsed.kidMode === 'boolean') return parsed.kidMode;
+      } catch (e) { /* ignore */ }
     }
     return false;
   });
