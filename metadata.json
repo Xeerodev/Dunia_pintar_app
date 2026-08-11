@@ -1,0 +1,6 @@
+{
+  "name": "Dunia Pintar",
+  "description": "Aplikasi Belajar Interaktif Anak dengan Permainan, Huruf, Angka, Agama, Hewan, Bahasa Inggris, dan Dashboard Orang Tua.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
