@@ -20,7 +20,7 @@ export const MASCOT_IMAGES = {
 };
 
 export const ALPHABET_DATA: LetterItem[] = [
-  { letter: 'A', word: 'Apel', imageAlt: 'Buah Apel Merah', imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCY2MN9UvLLA8VBISAorrfdO8bonhpmur15ZFonc6HjD558uu8g_h4Qwzg4MpzvA8UKx7T_6z2bYHEFtFwaf1quzHLA7qbgPSMC1ZZpCo0Dn7Pbie1x1Syf_ZQErpGCA-XXkYJo8Qpw5Ot69W6iPQ-KkoSKLJRRs4qsjWZvRCSVR4GKtu9a_71w2YkJkwrIvhi3EZWtAy_GXfepX_f5JOFsBL8qeod9PGYEm_hTAn6NH6EDC-TrqMUx', colorBg: 'bg-primary text-on-primary', colorBorder: 'border-primary-container' },
+  { letter: 'A', word: 'Apel', imageAlt: 'Buah Apel Merah', imageUrl: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400&auto=format&fit=crop&q=80', colorBg: 'bg-primary text-on-primary', colorBorder: 'border-primary-container' },
   { letter: 'B', word: 'Buku', imageAlt: 'Buku Cerita Warna-warni', imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop&q=80', colorBg: 'bg-tertiary-container text-on-tertiary-container', colorBorder: 'border-tertiary-fixed' },
   { letter: 'C', word: 'Ceri', imageAlt: 'Buah Ceri Merah Manis', imageUrl: 'https://images.unsplash.com/photo-1528825871115-3581a5387919?w=400&auto=format&fit=crop&q=80', colorBg: 'bg-error-container text-on-error-container', colorBorder: 'border-error' },
   { letter: 'D', word: 'Domba', imageAlt: 'Domba Putih Lucu', imageUrl: 'https://images.unsplash.com/photo-1484557052118-f32bd25b45b5?w=400&auto=format&fit=crop&q=80', colorBg: 'bg-secondary-container text-on-secondary-container', colorBorder: 'border-secondary-fixed' },

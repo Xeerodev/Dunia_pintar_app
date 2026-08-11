@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { ArrowLeft, Moon, Sun, Volume2, VolumeX, Star } from 'lucide-react';
 import { MASCOT_IMAGES } from '../data/appData';

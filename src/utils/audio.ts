@@ -21,28 +21,23 @@ function getAudioContext(): AudioContext {
  * Text To Speech synthesis using browser Web Speech API
  */
 export function speakText(text: string, lang: 'id-ID' | 'en-US' = 'id-ID'): void {
-  if (!('speechSynthesis' in window)) {
-    console.warn('Speech synthesis not supported on this browser');
-    return;
-  }
+  if (!('speechSynthesis' in window)) return;
 
   // Function to perform the actual speaking
   const performSpeak = () => {
-    // Cancel ongoing speech
+    // Always cancel immediately before speaking new text to avoid "kaku" overlaps
     window.speechSynthesis.cancel();
 
-    // Small delay to ensure cancel is processed
+    // Small delay to ensure cancel is processed by the browser
     setTimeout(() => {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = lang;
 
-      // Indonesian voices are often "kaku". Let's optimize.
       // Child-friendly settings: slightly higher pitch, slightly slower rate.
-      utterance.rate = lang === 'id-ID' ? 0.95 : 0.9;
+      utterance.rate = lang === 'id-ID' ? 0.9 : 0.85;
       utterance.pitch = 1.3;
       utterance.volume = 1.0;
 
-      // Get all available voices
       const voices = window.speechSynthesis.getVoices();
 
       // Look for high quality voices first

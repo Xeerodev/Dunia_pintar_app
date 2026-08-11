@@ -13,7 +13,7 @@ interface Question {
 const QUESTIONS: Question[] = [
   {
     id: 1,
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCY2MN9UvLLA8VBISAorrfdO8bonhpmur15ZFonc6HjD558uu8g_h4Qwzg4MpzvA8UKx7T_6z2bYHEFtFwaf1quzHLA7qbgPSMC1ZZpCo0Dn7Pbie1x1Syf_ZQErpGCA-XXkYJo8Qpw5Ot69W6iPQ-KkoSKLJRRs4qsjWZvRCSVR4GKtu9a_71w2YkJkwrIvhi3EZWtAy_GXfepX_f5JOFsBL8qeod9PGYEm_hTAn6NH6EDC-TrqMUx',
+    imageUrl: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500&auto=format&fit=crop&q=80',
     correctName: 'Apel',
     options: ['Jeruk', 'Apel', 'Pisang', 'Anggur'],
   },

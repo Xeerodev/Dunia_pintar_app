@@ -92,7 +92,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [stars, setStars] = useState<number>(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (saved) {
-      try { return JSON.parse(saved).stars ?? 125; } catch (e) { console.debug(e); }
+      try {
+        const parsed = JSON.parse(saved);
+        return typeof parsed.stars === 'number' ? parsed.stars : 125;
+      } catch (e) {
+        return 125;
+      }
     }
     return 125;
   });
@@ -100,7 +105,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [coins, setCoins] = useState<number>(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (saved) {
-      try { return JSON.parse(saved).coins ?? 450; } catch (e) { console.debug(e); }
+      try {
+        const parsed = JSON.parse(saved);
+        return typeof parsed.coins === 'number' ? parsed.coins : 450;
+      } catch (e) {
+        return 450;
+      }
     }
     return 450;
   });
@@ -110,7 +120,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (saved) {
-      try { return JSON.parse(saved).darkMode ?? false; } catch (e) { console.debug(e); }
+      try {
+        const parsed = JSON.parse(saved);
+        return typeof parsed.darkMode === 'boolean' ? parsed.darkMode : false;
+      } catch (e) {
+        return false;
+      }
     }
     return false;
   });
@@ -129,7 +144,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [kidMode, setKidMode] = useState<boolean>(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (saved) {
-      try { return JSON.parse(saved).kidMode ?? false; } catch (e) { return false; }
+      try {
+        const parsed = JSON.parse(saved);
+        return typeof parsed.kidMode === 'boolean' ? parsed.kidMode : false;
+      } catch (e) {
+        return false;
+      }
     }
     return false;
   });

@@ -1,8 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Quicksand', sans-serif;
+  --font-quicksand: 'Quicksand', sans-serif;
 }
 
 /* Enable class-based dark mode in Tailwind 4 */
@@ -64,12 +63,8 @@
 
 /* Shining & Floating Animations */
 @keyframes shine {
-  0% {
-    transform: translateX(-100%) rotate(30deg);
-  }
-  100% {
-    transform: translateX(100%) rotate(30deg);
-  }
+  0% { transform: translateX(-100%) rotate(30deg); }
+  100% { transform: translateX(100%) rotate(30deg); }
 }
 
 .shining-effect {
@@ -95,12 +90,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
 }
 
 .floating-anim {
