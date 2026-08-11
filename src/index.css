@@ -1,11 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Quicksand', sans-serif;
+}
+
+/* Enable class-based dark mode in Tailwind 4 */
+@variant dark (&:where(.dark, .dark *));
+
 @layer base {
   body {
     font-family: 'Quicksand', sans-serif;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
+    @apply transition-colors duration-300;
   }
 }
 

@@ -26,22 +26,54 @@ export function speakText(text: string, lang: 'id-ID' | 'en-US' = 'id-ID'): void
     return;
   }
 
-  // Cancel ongoing speech
-  window.speechSynthesis.cancel();
+  // Function to perform the actual speaking
+  const performSpeak = () => {
+    // Cancel ongoing speech
+    window.speechSynthesis.cancel();
 
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = lang;
-  utterance.rate = 0.9; // Slightly slower for kids
-  utterance.pitch = 1.2; // Slightly higher/friendly pitch for kids
+    // Small delay to ensure cancel is processed
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
 
-  // Select appropriate voice if available
-  const voices = window.speechSynthesis.getVoices();
-  const targetVoice = voices.find((v) => v.lang.startsWith(lang.split('-')[0]));
-  if (targetVoice) {
-    utterance.voice = targetVoice;
+      // Indonesian voices are often "kaku". Let's optimize.
+      utterance.rate = lang === 'id-ID' ? 1.05 : 0.95;
+      utterance.pitch = 1.15; // Slightly higher for child-friendly feel
+      utterance.volume = 1.0;
+
+      // Get all available voices
+      const voices = window.speechSynthesis.getVoices();
+
+      // Look for high quality voices first
+      let targetVoice = voices.find(v => v.lang === lang && (v.name.includes('Google') || v.name.includes('Natural')));
+
+      if (!targetVoice) {
+        targetVoice = voices.find(v => v.lang === lang);
+      }
+
+      if (!targetVoice) {
+        const langShort = lang.split('-')[0];
+        targetVoice = voices.find(v => v.lang.startsWith(langShort));
+      }
+
+      if (targetVoice) {
+        utterance.voice = targetVoice;
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }, 50);
+  };
+
+  // Check if voices are already loaded
+  if (window.speechSynthesis.getVoices().length > 0) {
+    performSpeak();
+  } else {
+    // Wait for voices to load
+    window.speechSynthesis.onvoiceschanged = () => {
+      performSpeak();
+      window.speechSynthesis.onvoiceschanged = null;
+    };
   }
-
-  window.speechSynthesis.speak(utterance);
 }
 
 /**

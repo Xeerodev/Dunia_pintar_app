@@ -214,7 +214,10 @@ export const BelajarReligi: React.FC = () => {
                     <Volume2 className="w-5 h-5" />
                   </button>
                 </div>
-                <div className="text-right text-2xl font-semibold mb-3 leading-loose text-[#141d23] dark:text-white dir-rtl">
+                <div
+                  className="text-right text-2xl font-semibold mb-3 leading-loose text-[#141d23] dark:text-white"
+                  dir="rtl"
+                >
                   {doa.arabic}
                 </div>
                 <div className="text-xs font-semibold text-[#00677d] dark:text-[#4cd6fb] italic mb-2">
