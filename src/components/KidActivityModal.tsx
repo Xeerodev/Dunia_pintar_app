@@ -26,13 +26,15 @@ export const KidActivityModal: React.FC<KidActivityModalProps> = ({ item, onClos
   const handleSelect = (idx: number) => {
     setSelectedOption(idx);
     playPopSound();
-    if (soundEnabled) {
-      speakText('Wah, jawabanmu tepat sekali! Kamu mendapat 20 Bintang!', 'id-ID');
-    }
+
+    // Delay feedback voice so it doesn't overlap with the "click" feel
     setTimeout(() => {
+      if (soundEnabled) {
+        speakText('Hebat! Jawabanmu tepat sekali! Kamu dapat bintang!', 'id-ID');
+      }
       setCompleted(true);
       addStars(20);
-    }, 600);
+    }, 800);
   };
 
   const handleSpeakTitle = () => {

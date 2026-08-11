@@ -19,6 +19,10 @@ interface AppContextType extends AppState {
   removeCustomItem: (id: string) => void;
   toggleRecommendation: (id: string) => void;
   triggerConfetti: () => void;
+  kidMode: boolean;
+  setKidMode: (enabled: boolean) => void;
+  isParentAuthenticated: boolean;
+  setParentAuthenticated: (auth: boolean) => void;
 }
 
 const initialParentSettings: ParentSettings = {
@@ -122,6 +126,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   ]);
 
   const [parentSettings, setParentSettingsState] = useState<ParentSettings>(initialParentSettings);
+  const [kidMode, setKidMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (saved) {
+      try { return JSON.parse(saved).kidMode ?? false; } catch (e) { return false; }
+    }
+    return false;
+  });
+  const [isParentAuthenticated, setParentAuthenticated] = useState<boolean>(false);
 
   // Sync dark mode class on <html> element
   useEffect(() => {
@@ -143,9 +155,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       selectedCostumeId,
       unlockedCostumes,
       parentSettings,
+      kidMode,
     };
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(stateToSave));
-  }, [stars, coins, xp, level, darkMode, selectedCostumeId, unlockedCostumes, parentSettings]);
+  }, [stars, coins, xp, level, darkMode, selectedCostumeId, unlockedCostumes, parentSettings, kidMode]);
 
   const triggerConfetti = () => {
     confetti({
@@ -290,6 +303,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         removeCustomItem,
         toggleRecommendation,
         triggerConfetti,
+        kidMode,
+        setKidMode,
+        isParentAuthenticated,
+        setParentAuthenticated,
       }}
     >
       {children}

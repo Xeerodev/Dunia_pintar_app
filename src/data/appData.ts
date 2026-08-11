@@ -11,12 +11,12 @@ import {
 } from '../types';
 
 export const MASCOT_IMAGES = {
-  default: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBo4tKTNIGtSZ8Bv-ece-a2Q4AzX7_T04Qk5CxxsSBi3PQa8CPgD7Ea0v43_V0_MhR9sgK1oZgg-9Gj8_m2uIuCnHRNTuOFeWWNRigmY1idaeFeVbBw2Eyu52DHB8MVyWZmHbNhuK1feoFkjBYTjNBMP2upto6XEuX5wqTmZgBGWUUxHykMhJn2Pp1I3unUKZ8vrrDFH6ORDDsCbN09_UEniwYxMsXtZxM0po43JnVKKa-TjU-sy6Ru',
-  religi: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBkPGZDoFkmlplzETWDEtLXak9cnP23lOBXGOcD77ptiyY_9toifnPSdIFg-3szJL1ZILwOWyLheqHGK1l6XlOevoCBRsZTtwGL2qpuaiQ1xU6TAYm-_jpK-la1NIXARkLhAv9LIuYbabUhb9EEu_0wV_PNkFvUcGn4_UXTlw8qbhFufPKKOk0KsVVo2rEBv3sIN1LvDl1Jr0pX8Qjik91dufTD_usIf0VZLpzRQi-kPZVYcpSBaYWo',
-  waving: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0tmOmNs7BucVRfcu7REMNgdbr91FXDL6xmQmEzLJ4fqW2rxSnfNR_XhJh9ZoPCp2KP0nL_Cy75kAlDcfOoOrFMaJBayyrqixcHblvfcZq368H361icrOooOLv1Gh7GmmbSAkB9SGiB4__fHTRfPxPvpCxJ7e6SjiPLKR7vEZBRCeEjiNsvZUAN7PP1HpsygTe3Sp2X66awhqrDWbi5Gu8EpdztszCY19J6IeOByr4loDKVYKUpGNW',
-  astronaut: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBsvzBht70DEFJOzMfrb_FH1Igkd--gIOtBqm-atmie_X5Rj_ifJwW7oWL5CMnG6biZfSYf-IxRPV1J3FI_ywk5-9UJkMT9pmYtAhddbEP2HKYBWFhfPHwmxU3_lJi6-1hj6Af-aNA_sYcVxLLPQ0nvYedAYBEg-q4RZgkh1-E_E5xPoQniSsNVSjyYNHCxctIcOrQNoDoFtkyVU7z26C7h-cjmJit4r-KtvfZTiGxfswYsEJ1ZUrnF',
-  pointing: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAgu-tnEe5ge17SZqo5JoT5JdHoi1uZdKzuJvGgYCV92PaCUo539bLLJVKureCYMSiT_xmu4TDATQsMEjCHHsPvrV4u7t0ID-6OzRnlOzOJVD9xVZ9Ub7b3Xf3izaMFq5MBRJeEGokxpluWbkK12JHOYjJrX-PrU6QgSUkJVe2y0WAVvQlPV3i3EoynL2DO6aEKbgTAHSP2Wt0O4oV7_XGRuUS0pSZyhyRjCzY6vrW07BIeKX6IDKP0',
-  avatarCircle: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBOANOao1BaWNMHm7HNCePS83i3ZKkXvfyWlTqVzUCQZjPtJaiwh5mJ900rTuzjAWiKcKNxxA8S0v_ZIYIv7lVDqChwrBAeDSXZgJ9uQr85bXPDd48Hrth3Jw0N33j72ZF0i4GV2jjToyC7HkAk8-7v9HLUTeOGj--_DrTszMAUp_7pvV9Vn-FbKudCPJrDuufjNAlPYVB-Y9kcM0rthaqRGxUor26UXc_uHLF7dm68oa7zMOvs7dQu',
+  default: 'https://images.unsplash.com/photo-1589254065878-42c9da997008?w=400&auto=format&fit=crop&q=80',
+  religi: 'https://images.unsplash.com/photo-1584281729290-382436442ef7?w=400&auto=format&fit=crop&q=80',
+  waving: 'https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=400&auto=format&fit=crop&q=80',
+  astronaut: 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=400&auto=format&fit=crop&q=80',
+  pointing: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&auto=format&fit=crop&q=80',
+  avatarCircle: 'https://images.unsplash.com/photo-1593085512500-5d55148d6f0d?w=200&auto=format&fit=crop&q=80',
 };
 
 export const ALPHABET_DATA: LetterItem[] = [

@@ -12,8 +12,19 @@ const PRESET_IMAGES = [
 ];
 
 export const ParentDashboard: React.FC = () => {
-  const { parentSettings, updateParentSettings, addCustomItem, removeCustomItem, toggleRecommendation, soundEnabled } = useApp();
-  const [showPinModal, setShowPinModal] = useState<boolean>(false);
+  const {
+    parentSettings,
+    updateParentSettings,
+    addCustomItem,
+    removeCustomItem,
+    toggleRecommendation,
+    soundEnabled,
+    kidMode,
+    setKidMode,
+    isParentAuthenticated,
+    setParentAuthenticated
+  } = useApp();
+
   const [pinInput, setPinInput] = useState<string>('');
   const [pinError, setPinError] = useState<boolean>(false);
 
@@ -25,75 +36,95 @@ export const ParentDashboard: React.FC = () => {
   const [newType, setNewType] = useState<'quiz' | 'flashcard' | 'story'>('quiz');
   const [selectedImg, setSelectedImg] = useState<string>(PRESET_IMAGES[0].url);
 
-  const handleToggleLock = () => {
-    playPopSound();
-    updateParentSettings({ lockAfter2Hours: !parentSettings.lockAfter2Hours });
-  };
-
-  const handleToggleBedtime = () => {
-    playPopSound();
-    updateParentSettings({ bedtimeMode: !parentSettings.bedtimeMode });
-  };
-
-  const handleCreateCustomItem = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTitle.trim()) return;
-
-    const newItem: CustomContentItem = {
-      id: `custom_${Date.now()}`,
-      title: newTitle.trim(),
-      desc: newDesc.trim() || 'Modul khusus buatan Orang Tua untuk latihan anak.',
-      category: newCategory,
-      image: selectedImg,
-      addedByParent: true,
-      type: newType,
-    };
-
-    addCustomItem(newItem);
-    setNewTitle('');
-    setNewDesc('');
-    setShowAddForm(false);
-
-    if (soundEnabled) {
-      speakText(`Modul ${newItem.title} berhasil ditambahkan ke Belajar dan Main!`, 'id-ID');
-    }
-  };
-
   const handlePinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (pinInput === parentSettings.parentPin) {
       playPopSound();
-      setShowPinModal(false);
+      setParentAuthenticated(true);
       setPinInput('');
       setPinError(false);
     } else {
       setPinError(true);
+      setPinInput('');
     }
   };
 
-  return (
-    <div className="space-y-4">
-      {/* Header Section */}
-      <div className="flex justify-between items-center bg-white dark:bg-[#1a232b] p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-xs">
-        <div>
-          <h2 className="text-base font-black text-slate-800 dark:text-white leading-tight">
-            Dashboard Orang Tua
-          </h2>
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-            Atur & Tambahkan Materi / Game untuk {parentSettings.childName}
-          </p>
+  const handleToggleKidMode = () => {
+    playPopSound();
+    setKidMode(!kidMode);
+  };
+
+  if (!isParentAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center p-6 space-y-6 animate-in fade-in duration-500">
+        <div className="w-20 h-20 bg-[#00677d] text-white rounded-3xl flex items-center justify-center shadow-xl">
+          <ShieldCheck className="w-10 h-10" />
+        </div>
+        <div className="text-center">
+          <h2 className="text-xl font-black text-slate-800 dark:text-white">Area Orang Tua</h2>
+          <p className="text-xs font-bold text-slate-500 dark:text-slate-400 mt-1">Masukkan PIN untuk masuk (Default: 1234)</p>
         </div>
 
-        <button
-          onClick={() => {
-            playPopSound();
-            setShowPinModal(true);
-          }}
-          className="bg-[#00677d] text-white font-bold px-3 py-1.5 rounded-full shadow-xs hover:scale-105 active:translate-y-0.5 transition-all flex items-center gap-1 text-xs shrink-0 btn-press"
-        >
-          <Settings className="w-3.5 h-3.5" />
-          Pengaturan
-        </button>
+        <form onSubmit={handlePinSubmit} className="w-full max-w-xs space-y-4">
+          <input
+            type="password"
+            maxLength={4}
+            value={pinInput}
+            onChange={(e) => setPinInput(e.target.value)}
+            className="w-full text-center text-2xl font-black tracking-widest p-4 rounded-2xl border-4 border-[#00b4d8] bg-white dark:bg-[#1a232b] dark:text-white focus:outline-none"
+            placeholder="****"
+            autoFocus
+          />
+          {pinError && (
+            <p className="text-xs text-red-500 font-bold text-center animate-bounce">PIN Salah! Silakan coba lagi.</p>
+          )}
+          <button
+            type="submit"
+            className="w-full py-4 bg-[#00677d] text-white font-black rounded-2xl shadow-lg btn-press"
+          >
+            Masuk Sekarang
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4 pb-28">
+      {/* Header Section */}
+      <div className="bg-white dark:bg-[#1a232b] p-4 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-xs space-y-3">
+        <div className="flex justify-between items-start">
+          <div>
+            <h2 className="text-lg font-black text-slate-800 dark:text-white leading-tight">
+              Dashboard Orang Tua
+            </h2>
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              Atur & Tambahkan Materi untuk {parentSettings.childName}
+            </p>
+          </div>
+          <button
+            onClick={() => setParentAuthenticated(false)}
+            className="text-[10px] font-black text-red-500 uppercase tracking-wider hover:underline"
+          >
+            Keluar Dashboard
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-[#222d37] rounded-2xl border border-slate-200 dark:border-slate-700">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className={`w-5 h-5 ${kidMode ? 'text-green-500' : 'text-slate-400'}`} />
+            <div className="text-left">
+              <span className="block text-[11px] font-black text-slate-800 dark:text-white uppercase tracking-tight">Mode Anak (Kid Mode)</span>
+              <span className="text-[10px] text-slate-500 font-bold">{kidMode ? 'Aktif: Tab Ortu Disembunyikan' : 'Nonaktif: Semua Tab Terlihat'}</span>
+            </div>
+          </div>
+          <button
+            onClick={handleToggleKidMode}
+            className={`w-12 h-6 rounded-full transition-colors relative ${kidMode ? 'bg-green-500' : 'bg-slate-300'}`}
+          >
+            <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${kidMode ? 'left-7' : 'left-1'}`} />
+          </button>
+        </div>
       </div>
 
       {/* Direct Add Content for Kids Section */}

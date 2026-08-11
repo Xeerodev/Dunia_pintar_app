@@ -1,32 +1,30 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useApp } from '../../../context/AppContext';
-import { playPopSound, playVictoryFanfare } from '../../../utils/audio';
-import { Paintbrush, Eraser, RotateCcw, Download, Sparkles } from 'lucide-react';
+import { playPopSound, playVictoryFanfare, speakText } from '../../../utils/audio';
+import { PaintBucket, Eraser, RotateCcw, Download, Sparkles } from 'lucide-react';
 
 const COLORS = [
-  '#00677d', // Primary Teal
-  '#00b4d8', // Sky Blue
-  '#46bd18', // Green
-  '#fdd404', // Yellow
-  '#ba1a1a', // Red
-  '#ff9800', // Orange
-  '#9c27b0', // Purple
+  '#FF0000', // Red
+  '#FF7F00', // Orange
+  '#FFFF00', // Yellow
+  '#00FF00', // Green
+  '#0000FF', // Blue
+  '#4B0082', // Indigo
+  '#8B00FF', // Violet
+  '#FFC0CB', // Pink
   '#000000', // Black
-  '#ffffff', // White (Eraser)
+  '#FFFFFF', // White
 ];
 
 export const MewarnaiGame: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>('#00b4d8');
-  const [brushSize, setBrushSize] = useState<number>(10);
-  const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const { addStars, triggerConfetti } = useApp();
+  const { addStars, triggerConfetti, soundEnabled } = useApp();
 
-  // Draw outline on initial mount
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
 
     // Set background to white
@@ -37,52 +35,101 @@ export const MewarnaiGame: React.FC = () => {
   }, []);
 
   const drawOutline = (ctx: CanvasRenderingContext2D) => {
-    ctx.strokeStyle = '#293138';
-    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 3;
     ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
-    // Friendly Dinosaur Line Art
+    // Friendly Elephant Outline
     ctx.beginPath();
-    // Body & Head
-    ctx.arc(150, 160, 60, 0, Math.PI * 2); // Head/Body circle
-    ctx.moveTo(180, 140);
-    ctx.arc(200, 130, 15, 0, Math.PI * 2); // Eye
-    // Smile
-    ctx.arc(170, 170, 20, 0, Math.PI);
+    // Head & Ear
+    ctx.arc(150, 130, 50, 0, Math.PI * 2);
+    ctx.moveTo(100, 130);
+    ctx.quadraticCurveTo(50, 80, 70, 160); // Left Ear
+    ctx.quadraticCurveTo(90, 180, 105, 150);
+
+    // Trunk
+    ctx.moveTo(150, 160);
+    ctx.quadraticCurveTo(150, 220, 120, 220);
+    ctx.quadraticCurveTo(100, 220, 100, 200);
+
+    // Eyes
+    ctx.moveTo(140, 120);
+    ctx.arc(135, 120, 4, 0, Math.PI * 2);
+    ctx.moveTo(170, 120);
+    ctx.arc(165, 120, 4, 0, Math.PI * 2);
+
+    // Body
+    ctx.moveTo(150, 180);
+    ctx.arc(180, 200, 60, Math.PI * 0.8, Math.PI * 0.2);
+
     // Legs
-    ctx.rect(120, 220, 20, 40);
-    ctx.rect(160, 220, 20, 40);
-    // Tail
-    ctx.moveTo(90, 170);
-    ctx.quadraticCurveTo(50, 200, 30, 160);
+    ctx.moveTo(130, 250);
+    ctx.lineTo(130, 280);
+    ctx.lineTo(150, 280);
+    ctx.lineTo(150, 255);
+
+    ctx.moveTo(190, 260);
+    ctx.lineTo(190, 280);
+    ctx.lineTo(210, 280);
+    ctx.lineTo(210, 250);
+
     ctx.stroke();
   };
 
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    setIsDrawing(true);
-    draw(e);
-  };
-
-  const stopDrawing = () => {
-    setIsDrawing(false);
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      if (ctx) ctx.beginPath();
-    }
-  };
-
-  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return;
+  const floodFill = (startX: number, startY: number, fillColor: string) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
 
-    const rect = canvas.getBoundingClientRect();
-    let clientX = 0;
-    let clientY = 0;
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
 
+    const startPos = (startY * canvas.width + startX) * 4;
+    const startR = data[startPos];
+    const startG = data[startPos + 1];
+    const startB = data[startPos + 2];
+    const startA = data[startPos + 3];
+
+    // Convert hex to RGB
+    const fillR = parseInt(fillColor.slice(1, 3), 16);
+    const fillG = parseInt(fillColor.slice(3, 5), 16);
+    const fillB = parseInt(fillColor.slice(5, 7), 16);
+
+    // Don't fill if color is the same or if it's the black outline (roughly)
+    if (startR === fillR && startG === fillG && startB === fillB) return;
+    if (startR < 50 && startG < 50 && startB < 50) return; // Prevent filling black outlines
+
+    const stack = [[startX, startY]];
+
+    while (stack.length > 0) {
+      const [x, y] = stack.pop()!;
+      const pos = (y * canvas.width + x) * 4;
+
+      if (x < 0 || x >= canvas.width || y < 0 || y >= canvas.height) continue;
+      if (data[pos] !== startR || data[pos + 1] !== startG || data[pos + 2] !== startB || data[pos + 3] !== startA) continue;
+
+      data[pos] = fillR;
+      data[pos + 1] = fillG;
+      data[pos + 2] = fillB;
+      data[pos + 3] = 255;
+
+      stack.push([x + 1, y]);
+      stack.push([x - 1, y]);
+      stack.push([x, y + 1]);
+      stack.push([x, y - 1]);
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+  };
+
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+
+    let clientX, clientY;
     if ('touches' in e) {
       clientX = e.touches[0].clientX;
       clientY = e.touches[0].clientY;
@@ -91,17 +138,11 @@ export const MewarnaiGame: React.FC = () => {
       clientY = e.clientY;
     }
 
-    const x = (clientX - rect.left) * (canvas.width / rect.width);
-    const y = (clientY - rect.top) * (canvas.height / rect.height);
+    const x = Math.floor((clientX - rect.left) * (canvas.width / rect.width));
+    const y = Math.floor((clientY - rect.top) * (canvas.height / rect.height));
 
-    ctx.lineWidth = brushSize;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = selectedColor;
-
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x, y);
+    playPopSound();
+    floodFill(x, y, selectedColor);
   };
 
   const handleClear = () => {
@@ -119,16 +160,19 @@ export const MewarnaiGame: React.FC = () => {
   const handleFinish = () => {
     playVictoryFanfare();
     triggerConfetti();
-    addStars(3);
+    addStars(5);
+    if (soundEnabled) {
+      speakText('Wah, warnanya bagus sekali! Gajahnya jadi cantik!', 'id-ID');
+    }
   };
 
   return (
     <div className="max-w-md mx-auto px-4 py-6 pb-28 text-center">
       <div className="bg-[#ffdad6] text-[#93000a] font-bold text-xs uppercase tracking-wider px-4 py-1.5 rounded-full inline-block mb-3">
-        Permainan Mewarnai Kreatif
+        Mewarnai Ajaib: Sekali Klik!
       </div>
       <h2 className="text-3xl font-bold text-[#141d23] dark:text-white mb-4">
-        Warnai Dinosaurus Pintar!
+        Warnai Gajah Pintar! 🐘
       </h2>
 
       {/* Canvas */}
@@ -137,18 +181,14 @@ export const MewarnaiGame: React.FC = () => {
           ref={canvasRef}
           width={300}
           height={300}
-          onMouseDown={startDrawing}
-          onMouseUp={stopDrawing}
-          onMouseMove={draw}
-          onTouchStart={startDrawing}
-          onTouchEnd={stopDrawing}
-          onTouchMove={draw}
-          className="rounded-2xl cursor-crosshair touch-none bg-white"
+          onClick={handleCanvasClick}
+          onTouchStart={handleCanvasClick}
+          className="rounded-2xl cursor-pointer touch-none bg-white"
         />
       </div>
 
       {/* Palette Colors */}
-      <div className="flex flex-wrap justify-center gap-2 mb-4 bg-white dark:bg-[#293138] p-3 rounded-2xl border-2 border-[#ffdad6]">
+      <div className="flex flex-wrap justify-center gap-2.5 mb-6 bg-white dark:bg-[#293138] p-4 rounded-3xl border-2 border-[#ffdad6] shadow-sm">
         {COLORS.map((c) => (
           <button
             key={c}
@@ -156,44 +196,35 @@ export const MewarnaiGame: React.FC = () => {
               playPopSound();
               setSelectedColor(c);
             }}
-            className={`w-9 h-9 rounded-full border-2 transition-all btn-press ${
-              selectedColor === c ? 'scale-125 border-black dark:border-white shadow-md' : 'border-transparent'
+            className={`w-10 h-10 rounded-full border-4 transition-all btn-press ${
+              selectedColor === c ? 'scale-125 border-slate-800 dark:border-white shadow-lg' : 'border-transparent'
             }`}
             style={{ backgroundColor: c }}
           />
         ))}
       </div>
 
-      {/* Brush Size & Controls */}
-      <div className="flex justify-between items-center gap-2 mb-6">
-        <div className="flex items-center gap-2 bg-white dark:bg-[#293138] px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700">
-          <Paintbrush className="w-4 h-4 text-[#00677d] dark:text-[#4cd6fb]" />
-          <input
-            type="range"
-            min={4}
-            max={24}
-            value={brushSize}
-            onChange={(e) => setBrushSize(Number(e.target.value))}
-            className="w-24 accent-[#00b4d8]"
-          />
-        </div>
-
+      <div className="grid grid-cols-2 gap-3 mb-6">
         <button
           onClick={handleClear}
-          className="p-3 bg-[#ffdad6] text-[#93000a] rounded-full font-bold text-xs flex items-center gap-1 btn-press"
+          className="py-3.5 bg-slate-100 dark:bg-[#25323e] text-slate-700 dark:text-slate-300 rounded-2xl font-black text-sm flex items-center justify-center gap-2 btn-press border-b-4 border-slate-300 dark:border-slate-900"
         >
-          <RotateCcw className="w-4 h-4" />
-          Bersih
+          <RotateCcw className="w-5 h-5" />
+          Mulai Lagi
         </button>
 
         <button
           onClick={handleFinish}
-          className="px-5 py-2.5 bg-[#46bd18] text-white rounded-full font-bold text-xs flex items-center gap-1 btn-press shadow-md"
+          className="py-3.5 bg-[#46bd18] text-white rounded-2xl font-black text-sm flex items-center justify-center gap-2 btn-press shadow-md border-b-4 border-[#3ca513]"
         >
-          <Sparkles className="w-4 h-4" />
-          Selesai (+3 ⭐)
+          <Sparkles className="w-5 h-5" />
+          Simpan Karya
         </button>
       </div>
+
+      <p className="text-xs font-bold text-slate-500 dark:text-slate-400 italic">
+        *Klik pada bagian gambar yang kosong untuk mewarnai secara otomatis!
+      </p>
     </div>
   );
 };

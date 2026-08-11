@@ -37,23 +37,19 @@ export function speakText(text: string, lang: 'id-ID' | 'en-US' = 'id-ID'): void
       utterance.lang = lang;
 
       // Indonesian voices are often "kaku". Let's optimize.
-      utterance.rate = lang === 'id-ID' ? 1.05 : 0.95;
-      utterance.pitch = 1.15; // Slightly higher for child-friendly feel
+      // Child-friendly settings: slightly higher pitch, slightly slower rate.
+      utterance.rate = lang === 'id-ID' ? 0.95 : 0.9;
+      utterance.pitch = 1.3;
       utterance.volume = 1.0;
 
       // Get all available voices
       const voices = window.speechSynthesis.getVoices();
 
       // Look for high quality voices first
-      let targetVoice = voices.find(v => v.lang === lang && (v.name.includes('Google') || v.name.includes('Natural')));
+      let targetVoice = voices.find(v => v.lang.includes(lang.split('-')[0]) && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium')));
 
       if (!targetVoice) {
-        targetVoice = voices.find(v => v.lang === lang);
-      }
-
-      if (!targetVoice) {
-        const langShort = lang.split('-')[0];
-        targetVoice = voices.find(v => v.lang.startsWith(langShort));
+        targetVoice = voices.find(v => v.lang.startsWith(lang.split('-')[0]));
       }
 
       if (targetVoice) {
