@@ -27,6 +27,7 @@ export const ParentDashboard: React.FC = () => {
 
   const [pinInput, setPinInput] = useState<string>('');
   const [pinError, setPinError] = useState<boolean>(false);
+  const [showPinModal, setShowPinModal] = useState<boolean>(false);
 
   // New Custom Content Form State
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
@@ -36,11 +37,48 @@ export const ParentDashboard: React.FC = () => {
   const [newType, setNewType] = useState<'quiz' | 'flashcard' | 'story'>('quiz');
   const [selectedImg, setSelectedImg] = useState<string>(PRESET_IMAGES[0].url);
 
+  const handleToggleLock = () => {
+    playPopSound();
+    updateParentSettings({ lockAfter2Hours: !parentSettings.lockAfter2Hours });
+  };
+
+  const handleToggleBedtime = () => {
+    playPopSound();
+    updateParentSettings({ bedtimeMode: !parentSettings.bedtimeMode });
+  };
+
+  const handleCreateCustomItem = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTitle.trim()) return;
+
+    const newItem: CustomContentItem = {
+      id: `custom_${Date.now()}`,
+      title: newTitle.trim(),
+      desc: newDesc.trim() || 'Modul khusus buatan Orang Tua untuk latihan anak.',
+      category: newCategory,
+      image: selectedImg,
+      addedByParent: true,
+      type: newType,
+    };
+
+    addCustomItem(newItem);
+    setNewTitle('');
+    setNewDesc('');
+    setShowAddForm(false);
+
+    if (soundEnabled) {
+      speakText(`Modul ${newItem.title} berhasil ditambahkan ke Belajar dan Main!`, 'id-ID');
+    }
+  };
+
   const handlePinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (pinInput === parentSettings.parentPin) {
       playPopSound();
-      setParentAuthenticated(true);
+      if (!isParentAuthenticated) {
+        setParentAuthenticated(true);
+      }
+      setShowPinModal(false);
       setPinInput('');
       setPinError(false);
     } else {
