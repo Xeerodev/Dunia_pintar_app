@@ -13,7 +13,7 @@ Aplikasi edukasi interaktif yang dirancang khusus untuk anak-anak untuk belajar 
 - **🔊 Suara Ramah Anak:** Fitur *Text-to-Speech* yang dioptimalkan agar tidak kaku.
 
 ## 🚀 Persiapan Rilis APK
-Aplikasi ini sedang dalam tahap finalisasi untuk rilis versi Android (APK). Pastikan semua fitur telah diuji di lingkungan lokal sebelum proses *build*.
+Aplikasi ini sedang dalam tahap finalisasi untuk rilis versi Android (APK). Semua fitur masih dalam tahap pengujian.
 
 ## 🛠️ Cara Menjalankan Lokal
 **Prerequisites:** Node.js
